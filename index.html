@@ -134,6 +134,20 @@ input[aria-invalid=true]{border-color:var(--err)}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;font-weight:600;z-index:60;max-width:calc(100% - 32px)}
 #boot{position:fixed;inset:0;background:var(--paper);display:flex;align-items:center;justify-content:center;font-weight:700;z-index:70}
 
+
+/* more menu */
+.who{display:flex;align-items:center;gap:14px;padding:2px 0 20px}
+.av{width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--gold);display:flex;align-items:center;justify-content:center;font:600 20px 'Fraunces',serif;flex:none}
+.who b{display:block;font-size:16px}.who span{font-size:13px;color:var(--muted)}
+.menu{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.mi{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;padding:0 16px;background:#fff;border:1px solid var(--rule);border-radius:14px;text-decoration:none;color:var(--ink);font:700 16px 'Manrope',sans-serif;text-align:left;cursor:pointer}
+.mi:active,.mi:hover{background:var(--paper);color:var(--ink)}
+.mi .ic{width:42px;height:42px;border-radius:12px;background:var(--ink);color:var(--gold);display:flex;align-items:center;justify-content:center;flex:none}
+.mi small{display:block;font-weight:500;font-size:13px;color:var(--muted);margin-top:1px}
+.mi .ch{margin-left:auto;color:var(--muted);flex:none}
+.mi.out{margin-top:6px;border-color:#e0a3a3;color:var(--err)}
+.mi.out .ic{background:var(--errbg);color:var(--err)}
+
 @media (max-width:900px){
   .shell{flex-direction:column}
   .brand{flex:none;max-width:none;padding:16px 20px;padding-top:max(16px,env(safe-area-inset-top));flex-direction:row;align-items:center;gap:0}
@@ -699,8 +713,14 @@ const A = {
   staffModal: (d) => staffModal(d.id), staffLink,
   goReminders: () => { closeModal(); go("/reminders"); }, goClient: (d) => go("/clients/" + d.id),
   setFilter: (d) => { S.filter = d.v; render(); }, remTab: (d) => { S.remTab = d.v; render(); },
-  signout: async () => { await sb.auth.signOut(); showAuth(); },
-  more: () => modal({ title: "More", hideSubmit: true, body: `<div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px"><a class="btn big" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="#/reminders" data-act="closeModal">Reminders</a>${isAdmin() ? `<a class="btn big" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="#/staff" data-act="closeModal">Staff</a><a class="btn big" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="#/settings" data-act="closeModal">Settings</a>` : ""}<button type="button" class="btn big" data-act="signout">Sign out</button></div>` }),
+  signout: async () => { closeModal(); await sb.auth.signOut(); showAuth(); },
+  more: () => {
+    const row = (href, k, title, sub) => `<a class="mi" href="#/${href}" data-act="closeModal"><span class="ic">${svg(NAV.find((n) => n[0] === k)[2])}</span><span>${title}<small>${sub}</small></span><span class="ch">${svg('<path d="M9 6l6 6-6 6"/>')}</span></a>`;
+    modal({ title: "More", hideSubmit: true, body:
+      `<div class="who"><span class="av" aria-hidden="true">${esc((S.me.full_name || "?").trim().charAt(0).toUpperCase())}</span><div><b>${esc(S.me.full_name)}</b><span>${S.me.role === "admin" ? "Admin" : "Staff"}</span></div></div>
+       <div class="menu">${row("reminders", "reminders", "Reminders", "Who to remind and messages sent")}${isAdmin() ? row("staff", "staff", "Staff", "Manage who can sign in") + row("settings", "settings", "Settings", "Rates, payment details and message") : ""}
+       <button type="button" class="mi out" data-act="signout"><span class="ic">${svg('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>')}</span><span>Sign out</span></button></div>` });
+  },
   loanStatus: (d) => guard(async () => { const { error } = await sb.from("loans").update({ status: d.v }).eq("id", d.id); if (error) throw error; closeModal(); await refresh(); toast("Loan updated"); }),
   loanDelete: (d) => { if (!confirm("Delete this loan? This can’t be undone. Payments must be deleted first.")) return; guard(async () => { const { error } = await sb.from("loans").delete().eq("id", d.id); if (error) throw error; closeModal(); await refresh(); toast("Loan deleted"); }); },
   payDelete: (d) => { if (!confirm("Delete this payment? This can’t be undone.")) return; guard(async () => { const { error } = await sb.from("payments").delete().eq("id", d.id); if (error) throw error; await refresh(); toast("Payment deleted"); }); },
