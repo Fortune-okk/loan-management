@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10231C">
+<title>Thandeka’s Loans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#10231C;--paper:#F6F4EE;--gold:#E3A94B;--muted:#3d4a44;--line:#8a958f;--rule:#d9d6cb;--err:#9b1c1c;--errbg:#fdecec;--ok:#14532d;--okbg:#e7f5ec}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Manrope',system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-text-size-adjust:100%}
+a{color:var(--ink)}a:hover{color:#2d6a4f}
+.hidden{display:none!important}
+.noscroll{overflow:hidden}
+button,input,select,textarea{font-family:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* ---------- Sign-in ---------- */
+.shell{min-height:100vh;min-height:100dvh;display:flex}
+.brand{flex:1 1 50%;max-width:620px;background:var(--ink);padding:56px 64px;display:flex;flex-direction:column;justify-content:space-between;gap:48px}
+.logo{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:700;color:var(--paper)}
+.brand h1{margin:0 0 32px;font-family:'Fraunces',serif;font-weight:600;font-size:46px;line-height:1.12;color:var(--paper);max-width:460px}
+.brand ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:18px;max-width:460px}
+.brand li{display:flex;gap:14px;align-items:flex-start;font-size:16px;line-height:1.5;color:#C9D6CF}
+.brand li svg{flex:none;margin-top:2px}
+.panel{flex:1 1 50%;padding:56px 32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+.card1{width:100%;max-width:400px}
+.notice{margin:0;max-width:400px;width:100%;font-size:13px;line-height:1.5;color:var(--muted)}
+h2.t{margin:0 0 8px;font-size:30px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.sub{margin:0 0 24px;font-size:15px;line-height:1.5;color:var(--muted)}
+.fm{display:flex;flex-direction:column;gap:20px}
+.field{display:flex;flex-direction:column;gap:8px}
+.row2{display:flex;justify-content:space-between;align-items:center;gap:12px}
+label.l{font-size:13px;font-weight:600;color:var(--muted)}
+input[type=email],input[type=password],input[type=text],input[type=tel],input[type=number],input[type=date],select,textarea{width:100%;height:50px;padding:0 16px;font:500 16px 'Manrope',sans-serif;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:10px;-webkit-appearance:none;appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%2310231C' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px}
+textarea{height:auto;padding:12px 16px;resize:vertical;min-height:90px}
+input[disabled],select[disabled],textarea[disabled]{background:#ece9df;color:var(--muted)}
+input[aria-invalid=true]{border-color:var(--err)}
+.ferr{margin:0;font-size:13px;line-height:1.4;color:var(--err)}
+.hint{margin:0;font-size:13px;color:#7a4b00}
+.pw{position:relative;display:flex;align-items:center}
+.pw input{padding-right:80px}
+.pw button{position:absolute;right:4px;height:42px;min-width:52px;padding:0 12px;font:600 13px 'Manrope',sans-serif;color:var(--ink);background:transparent;border:0;border-radius:8px;cursor:pointer}
+.check{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted);min-height:44px;cursor:pointer}
+.check input{width:20px;height:20px;margin:0;accent-color:var(--ink)}
+.primary{height:54px;display:inline-flex;align-items:center;justify-content:center;gap:10px;font:700 16px 'Manrope',sans-serif;color:#fff;background:var(--ink);border:0;border-radius:10px;cursor:pointer;width:100%}
+.primary[disabled]{opacity:.65;cursor:not-allowed}
+.ghost{height:48px;width:100%;font:600 15px 'Manrope',sans-serif;color:var(--ink);background:transparent;border:1.5px solid var(--line);border-radius:10px;cursor:pointer}
+.linkbtn{background:none;border:0;padding:10px 0;min-height:44px;font:600 14px 'Manrope',sans-serif;color:var(--ink);text-decoration:underline;cursor:pointer}
+.alert{display:none;padding:12px 14px;margin-bottom:20px;border-radius:10px;font-size:14px;line-height:1.45}
+.alert.show{display:block}
+.alert.err{color:var(--err);background:var(--errbg);border:1px solid #e9b3b3}
+.alert.ok{color:var(--ok);background:var(--okbg);border:1px solid #b6dcc3}
+.icon-circle{width:56px;height:56px;border-radius:50%;background:var(--okbg);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:s .8s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+
+/* ---------- App shell ---------- */
+.app{min-height:100vh;min-height:100dvh;display:flex}
+.side{flex:none;width:248px;padding:24px 16px;background:var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:24px;position:sticky;top:0;height:100vh;height:100dvh}
+.side .logo{font-size:16px;padding:0 4px}
+.navs{display:flex;flex-direction:column;gap:4px;margin-top:28px}
+.nav{display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:10px;color:#C9D6CF;font-size:15px;font-weight:600;text-decoration:none}
+.nav:hover{color:#fff}
+.nav.on{background:#1d3a2f;color:#F6F4EE}.nav.on svg{stroke:var(--gold)}
+.me{padding-top:16px;border-top:1px solid #2a4a3d;display:flex;flex-direction:column;gap:12px}
+.me b{display:block;color:#F6F4EE;font-size:14px}.me span{color:#9fb2a8;font-size:13px}
+.main{flex:1;min-width:0;padding:32px 40px 48px;display:flex;flex-direction:column;gap:24px}
+.topbar,.tabs{display:none}
+.ph{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+.ph h1{margin:0;font-size:28px;font-weight:700;letter-spacing:-.01em}
+.ph p{margin:4px 0 0;font-size:14px;color:var(--muted)}
+.acts{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.search{height:44px;width:240px;padding:0 16px;font-size:14px}
+.card{background:#fff;border:1px solid var(--rule);border-radius:14px}
+.cardh{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 20px;flex-wrap:wrap}
+.cardh h2{margin:0;font-size:17px;font-weight:700}
+.pad{padding:24px}
+.grid{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.kpis{display:flex;flex-wrap:wrap;gap:16px}
+.kpi{flex:1 1 190px;background:#fff;border:1px solid var(--rule);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:6px}
+.kl{font-size:13px;font-weight:600;color:var(--muted)}
+.kv{font-family:'Fraunces',serif;font-size:28px;font-weight:600;line-height:1.1}
+.kn{font-size:13px;color:var(--muted)}
+.tr{display:grid;grid-template-columns:var(--c);gap:12px;align-items:center;padding:14px 20px;border-top:1px solid #ece9df;font-size:14px}
+.tr.hd{border-top:0;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.td{min-width:0;overflow-wrap:anywhere}
+.td.act{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.nm{font-weight:700}.mut{color:var(--muted);font-size:13px}.neg{color:var(--err)}
+.chip{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.paid{background:var(--okbg);color:var(--ok)}.soon{background:#fff3d6;color:#7a4b00}.late{background:var(--errbg);color:var(--err)}.gray{background:#ece9df;color:var(--muted)}
+.btn{height:36px;padding:0 14px;border-radius:8px;font:700 13px 'Manrope',sans-serif;cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--ink);white-space:nowrap}
+.btn.pri{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.big{height:46px;font-size:14px;flex:1}
+.btn.dng{color:var(--err);border-color:#e0a3a3}
+.btn[disabled]{opacity:.6;cursor:not-allowed}
+.empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid #ece9df}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.sep{border-top:1px solid #ece9df}
+.li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 20px;border-top:1px solid #ece9df;font-size:14px}
+.kv2{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px}
+.kv2 div{display:flex;flex-direction:column;gap:2px}.kv2 span{font-size:13px;font-weight:600;color:var(--muted)}
+.doc{border:1px solid var(--rule);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.doc.none{border:2px dashed var(--line);align-items:center;text-align:center;padding:22px 16px}
+.note{display:flex;gap:10px;align-items:flex-start;background:var(--paper);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.5;color:var(--muted)}
+.sumbox{background:var(--paper);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.sumbox div{display:flex;justify-content:space-between;gap:12px}
+.f{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.f>label{font-size:13px;font-weight:600;color:var(--muted)}
+.f small{font-size:12px;color:var(--muted)}
+.f input[type=file]{height:auto;padding:10px;font-size:14px}
+.two{display:flex;gap:12px}.two>*{flex:1;min-width:0}
+.sw{display:flex;gap:8px}.opt{flex:1;position:relative}
+.opt input{position:absolute;opacity:0;inset:0}
+.opt span{display:block;text-align:center;padding:12px 0;border:1.5px solid var(--line);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer}
+.opt input:checked+span{background:var(--ink);color:#fff;border-color:var(--ink)}
+.opt input:focus-visible+span{outline:3px solid var(--gold);outline-offset:2px}
+
+/* modal */
+#modal{position:fixed;inset:0;background:rgba(16,35,28,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+#modal.open{display:flex}
+.sheet{background:#fff;border-radius:16px;width:100%;max-width:480px;max-height:calc(100dvh - 40px);display:flex;flex-direction:column;overflow:hidden}
+.sheet.wide{max-width:640px}
+.sh-h{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--rule)}
+.sh-h h2{margin:0;font-size:19px}
+.x{width:44px;height:44px;margin:-8px -12px -8px 0;border:0;background:transparent;font-size:28px;line-height:1;cursor:pointer;color:var(--ink)}
+#mf{display:flex;flex-direction:column;min-height:0;flex:1}
+.sh-b{padding:24px 24px 8px;overflow:auto;flex:1}
+.sh-f{display:flex;gap:12px;padding:16px 24px;border-top:1px solid var(--rule)}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:10px;font-size:14px;font-weight:600;z-index:60;max-width:calc(100% - 32px)}
+#boot{position:fixed;inset:0;background:var(--paper);display:flex;align-items:center;justify-content:center;font-weight:700;z-index:70}
+
+@media (max-width:900px){
+  .shell{flex-direction:column}
+  .brand{flex:none;max-width:none;padding:16px 20px;padding-top:max(16px,env(safe-area-inset-top));flex-direction:row;align-items:center;gap:0}
+  .pitch{display:none}
+  .panel{flex:1;justify-content:flex-start;padding:32px 20px 40px}
+  .side{display:none}
+  .app{flex-direction:column}
+  .topbar{display:flex;align-items:center;justify-content:space-between;background:var(--ink);padding:12px 20px;padding-top:max(12px,env(safe-area-inset-top));position:sticky;top:0;z-index:20}
+  .tabs{display:flex;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom);z-index:20}
+  .tab{flex:1;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;font-weight:700;color:var(--muted);text-decoration:none;background:none;border:0;cursor:pointer}
+  .tab.on{color:var(--ink)}
+  .main{padding:20px 16px 110px}
+  .ph h1{font-size:24px}
+  .search{width:100%}.acts{width:100%}.acts .btn{flex:1}
+  .tr.hd{display:none}
+  .tr{grid-template-columns:1fr 1fr!important;padding:16px}
+  .tr .td:first-child,.tr .td.act{grid-column:1/-1}
+  .td[data-l]:not(:first-child):not(.act)::before{content:attr(data-l);display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+  .td.act{justify-content:flex-start}
+  #modal{padding:0;align-items:flex-end}
+  .sheet{max-width:none;border-radius:16px 16px 0 0;max-height:92dvh}
+  .sh-f{padding-bottom:max(16px,env(safe-area-inset-bottom))}
+}
+@media (max-width:480px){h2.t{font-size:26px}.two{flex-direction:column;gap:0}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+</style>
+</head>
+<body>
+<div id="boot">Loading…</div>
+
+<!-- =============== SIGN-IN =============== -->
+<div id="auth" class="shell hidden">
+  <aside class="brand">
+    <div class="logo">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect x="1" y="1" width="34" height="34" rx="9" stroke="#E3A94B" stroke-width="2"/><path d="M11 24V12h6.5a4 4 0 0 1 0 8H11" stroke="#E3A94B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Thandeka’s Loans</span>
+    </div>
+    <div class="pitch">
+      <h1>Every loan, every repayment, in one place.</h1>
+      <ul>
+        <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E3A94B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Track balances and due dates before the 4th of every month</span></li>
+        <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E3A94B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="3"/></svg><span>Match each payment to proof of payment</span></li>
+        <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E3A94B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><span>Send payment reminders to clients on time</span></li>
+      </ul>
+    </div>
+  </aside>
+  <main class="panel">
+    <div class="card1">
+      <section id="loginView">
+        <h2 class="t">Sign in</h2>
+        <p class="sub">Enter your staff credentials to open the dashboard.</p>
+        <div id="aLogin" class="alert" role="alert"></div>
+        <form id="loginForm" class="fm" novalidate>
+          <div class="field"><label class="l" for="email">Email</label>
+            <input id="email" type="email" inputmode="email" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="name@example.com" aria-describedby="emailErr">
+            <p class="ferr hidden" id="emailErr"></p></div>
+          <div class="field"><label class="l" for="password">Password</label>
+            <div class="pw"><input id="password" type="password" autocomplete="current-password" placeholder="Enter your password" aria-describedby="passErr capsHint"><button type="button" class="toggle" data-for="password" aria-label="Show password">Show</button></div>
+            <p class="hint hidden" id="capsHint">Caps Lock is on.</p>
+            <p class="ferr hidden" id="passErr"></p></div>
+          <label class="check"><input id="remember" type="checkbox"> Keep me signed in on this device</label>
+          <button id="loginBtn" class="primary" type="submit"><span class="spin hidden"></span><span class="lbl">Sign in</span></button>
+          <button type="button" id="toForgot" class="linkbtn">Forgot password?</button>
+        </form>
+      </section>
+      <section id="forgotView" class="hidden">
+        <h2 class="t">Reset your password</h2>
+        <p class="sub">Enter your staff email and we’ll send you a link to choose a new password.</p>
+        <form id="forgotForm" class="fm" novalidate>
+          <div class="field"><label class="l" for="femail">Email</label>
+            <input id="femail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="name@example.com" aria-describedby="femailErr">
+            <p class="ferr hidden" id="femailErr"></p></div>
+          <button id="forgotBtn" class="primary" type="submit"><span class="spin hidden"></span><span class="lbl">Send reset link</span></button>
+          <button type="button" class="ghost" data-goto="loginView">Back to sign in</button>
+        </form>
+      </section>
+      <section id="sentView" class="hidden">
+        <div class="icon-circle" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#14532d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
+        <h2 class="t">Check your email</h2>
+        <p class="sub">If that address belongs to a staff account, a reset link is on its way. It can take a minute to arrive, so check your spam folder too.</p>
+        <button type="button" class="ghost" data-goto="loginView">Back to sign in</button>
+      </section>
+      <section id="resetView" class="hidden">
+        <h2 class="t">Choose a new password</h2>
+        <p class="sub">Use at least 8 characters. A short phrase of several words works well.</p>
+        <div id="aReset" class="alert" role="alert"></div>
+        <form id="resetForm" class="fm" novalidate>
+          <div class="field"><label class="l" for="np1">New password</label>
+            <div class="pw"><input id="np1" type="password" autocomplete="new-password" aria-describedby="np1Err"><button type="button" class="toggle" data-for="np1" aria-label="Show password">Show</button></div>
+            <p class="ferr hidden" id="np1Err"></p></div>
+          <div class="field"><label class="l" for="np2">Confirm new password</label>
+            <div class="pw"><input id="np2" type="password" autocomplete="new-password" aria-describedby="np2Err"><button type="button" class="toggle" data-for="np2" aria-label="Show password">Show</button></div>
+            <p class="ferr hidden" id="np2Err"></p></div>
+          <button id="resetBtn" class="primary" type="submit"><span class="spin hidden"></span><span class="lbl">Save new password</span></button>
+        </form>
+      </section>
+    </div>
+    <p class="notice">Authorized staff only. Activity on this system is recorded. Having trouble? Contact the administrator.</p>
+  </main>
+</div>
+
+<!-- =============== APP =============== -->
+<div id="app" class="app hidden">
+  <nav class="side" aria-label="Main">
+    <div>
+      <div class="logo"><svg width="30" height="30" viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect x="1" y="1" width="34" height="34" rx="9" stroke="#E3A94B" stroke-width="2"/><path d="M11 24V12h6.5a4 4 0 0 1 0 8H11" stroke="#E3A94B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Thandeka’s Loans</div>
+      <div class="navs" id="navs"></div>
+    </div>
+    <div class="me"><div><b id="meName"></b><span id="meRole"></span></div><button class="btn" style="background:transparent;color:#F6F4EE;border-color:#4a6a5c" data-act="signout" type="button">Sign out</button></div>
+  </nav>
+  <div class="topbar"><div class="logo" style="font-size:16px"><svg width="28" height="28" viewBox="0 0 36 36" fill="none" aria-hidden="true"><rect x="1" y="1" width="34" height="34" rx="9" stroke="#E3A94B" stroke-width="2"/><path d="M11 24V12h6.5a4 4 0 0 1 0 8H11" stroke="#E3A94B" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Thandeka’s Loans</div></div>
+  <main class="main" id="main" tabindex="-1"></main>
+  <nav class="tabs" id="tabs" aria-label="Main"></nav>
+</div>
+<div id="modal"></div>
+<div id="toast" class="hidden" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ======================= CONFIG ======================= */
+const SUPABASE_URL = "https://xgeutlawegvnljsogntu.supabase.co";
+const SUPABASE_KEY = "sb_publishable_hXJhVT5US91ItSFcJRyrzQ_S1wzV-fK"; // publishable key: safe in the browser
+const MAX_ATTEMPTS = 5, COOLDOWN_SECONDS = 30;
+
+const makeClient = (storage) => supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { storage } });
+let sb = makeClient(window.localStorage);
+
+/* ======================= HELPERS ======================= */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const r2 = (n) => Math.round(n * 100) / 100;
+const S = { user: null, me: null, settings: null, clients: [], loans: [], payments: [], reminders: [], staffList: [], docs: {}, q: "", filter: "all", remTab: "send", cMap: {}, lMap: {}, pBy: {}, calc: {}, lastRem: {} };
+const isAdmin = () => S.me && S.me.role === "admin";
+const money = (n) => (S.settings ? S.settings.currency_symbol : "E") + " " + Number(n || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const pd = (s) => { const [y, m, d] = String(s).slice(0, 10).split("-").map(Number); return new Date(y, m - 1, d); };
+const fd = (d) => (typeof d === "string" ? pd(d) : d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+const iso = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+const todayD = () => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); };
+const monthName = (d) => d.toLocaleDateString("en-GB", { month: "long" });
+const num = (v) => parseFloat(String(v || "").replace(/,/g, ""));
+
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.classList.remove("hidden");
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.add("hidden"), 3200);
+}
+function errMsg(e) {
+  const m = (e && e.message) || "";
+  if ((e && (e.code === "42501" || e.code === "PGRST301")) || /permission denied|row-level security/i.test(m)) return "You don’t have permission to do that.";
+  if (e && e.code === "23503") return "That can’t be removed because other records depend on it.";
+  if (/fetch|network/i.test(m)) return "Can’t reach the server. Check your internet connection.";
+  return m || "Something went wrong. Please try again.";
+}
+
+/* ======================= LOAN MATHS =======================
+   Rules from your terms: monthly interest on the amount loaned; if the balance
+   isn't paid before the due day, a penalty of N% of (amount + interest) is added.
+   First due date = the due day of the month after the loan was issued. */
+function calc(loan) {
+  const pays = S.pBy[loan.id] || [];
+  const paid = pays.reduce((a, p) => a + Number(p.amount), 0);
+  const principal = Number(loan.principal);
+  const interest = r2(principal * Number(loan.interest_percent) / 100);
+  const base = r2(principal + interest);
+  const issued = pd(loan.issued_on);
+  const due = new Date(issued.getFullYear(), issued.getMonth() + 1, loan.due_day);
+  const today = todayD();
+  const late = today > due;
+  const onTime = pays.filter((p) => pd(p.paid_on) <= due).reduce((a, p) => a + Number(p.amount), 0);
+  const penalty = late && onTime < base - 0.005 ? r2(base * Number(loan.penalty_percent) / 100) : 0;
+  const owed = r2(base + penalty);
+  const balance = Math.max(0, r2(owed - paid));
+  let st;
+  if (loan.status === "written_off") st = "written_off";
+  else if (balance < 0.005) st = "paid";
+  else if (late) st = "overdue";
+  else if ((due - today) / 864e5 <= 7) st = "soon";
+  else st = "active";
+  return { paid, interest, base, due, penalty, owed, balance, st, pays };
+}
+const ST = { paid: ["paid", "Paid"], overdue: ["late", "Overdue"], soon: ["soon", "Due soon"], active: ["gray", "Active"], written_off: ["gray", "Written off"], none: ["gray", "No loan"] };
+const chip = (st) => `<span class="chip ${ST[st][0]}">${ST[st][1]}</span>`;
+function clientSt(cid) {
+  const ls = S.loans.filter((l) => l.client_id === cid);
+  if (!ls.length) return "none";
+  const sts = ls.map((l) => S.calc[l.id].st);
+  for (const k of ["overdue", "soon", "active"]) if (sts.includes(k)) return k;
+  return "paid";
+}
+const openLoans = () => S.loans.filter((l) => ["overdue", "soon", "active"].includes(S.calc[l.id].st));
+
+function reindex() {
+  S.cMap = Object.fromEntries(S.clients.map((c) => [c.id, c]));
+  S.lMap = Object.fromEntries(S.loans.map((l) => [l.id, l]));
+  S.pBy = {}; S.payments.forEach((p) => (S.pBy[p.loan_id] = S.pBy[p.loan_id] || []).push(p));
+  S.calc = {}; S.loans.forEach((l) => (S.calc[l.id] = calc(l)));
+  S.lastRem = {}; S.reminders.forEach((r) => { if (!S.lastRem[r.loan_id]) S.lastRem[r.loan_id] = r; });
+}
+async function loadAll() {
+  const r = await Promise.all([
+    sb.from("clients").select("*").order("full_name"),
+    sb.from("loans").select("*").order("issued_on", { ascending: false }),
+    sb.from("payments").select("*").order("paid_on", { ascending: false }).order("created_at", { ascending: false }),
+    sb.from("reminders").select("*").order("sent_at", { ascending: false }).limit(500),
+    sb.from("settings").select("*").eq("id", 1).single(),
+    sb.from("staff").select("*").order("full_name")
+  ]);
+  const bad = r.find((x) => x.error); if (bad) throw bad.error;
+  S.clients = r[0].data; S.loans = r[1].data; S.payments = r[2].data; S.reminders = r[3].data; S.settings = r[4].data; S.staffList = r[5].data;
+  reindex();
+}
+async function refresh() { await loadAll(); render(); }
+async function loadDocs(cid) {
+  const { data, error } = await sb.from("client_documents").select("*").eq("client_id", cid).order("created_at");
+  if (error) throw error; S.docs[cid] = data;
+}
+
+/* ======================= FILES ======================= */
+const OKTYPES = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+function checkFile(f) {
+  if (!OKTYPES.includes(f.type)) throw new Error("Use a JPG, PNG, WebP or PDF file.");
+  if (f.size > 5 * 1024 * 1024) throw new Error("That file is over 5 MB. Choose a smaller one.");
+}
+async function upload(bucket, folder, file) {
+  checkFile(file);
+  const name = file.name.replace(/[^\w.\-]+/g, "_").slice(-60);
+  const path = folder + "/" + crypto.randomUUID() + "-" + name;
+  const { error } = await sb.storage.from(bucket).upload(path, file, { contentType: file.type });
+  if (error) throw error;
+  return path;
+}
+async function openFile(bucket, path) {
+  const w = window.open("", "_blank");
+  const { data, error } = await sb.storage.from(bucket).createSignedUrl(path, 120);
+  if (error || !data) { if (w) w.close(); toast("Couldn’t open that file."); return; }
+  if (w) w.location = data.signedUrl; else location.href = data.signedUrl;
+}
+function pickFile(cb) {
+  const i = document.createElement("input"); i.type = "file"; i.accept = "image/*,application/pdf";
+  i.onchange = () => { if (i.files[0]) cb(i.files[0]); }; i.click();
+}
+async function guard(fn) { try { await fn(); } catch (e) { toast(errMsg(e)); } }
+
+/* ======================= MODAL + FORM BITS ======================= */
+function modal({ title, body, submit = "Save", onSubmit, wide, hideSubmit }) {
+  const m = $("modal");
+  m.innerHTML = `<div class="sheet${wide ? " wide" : ""}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="sh-h"><h2>${esc(title)}</h2><button type="button" class="x" data-act="closeModal" aria-label="Close">×</button></div><form id="mf" novalidate><div class="sh-b">${body}<p class="ferr hidden" id="mErr" role="alert"></p></div>${hideSubmit ? "" : `<div class="sh-f"><button type="button" class="btn big" data-act="closeModal">Cancel</button><button class="btn big pri" type="submit" id="mSub">${esc(submit)}</button></div>`}</form></div>`;
+  m.classList.add("open"); document.body.classList.add("noscroll");
+  const f = $("mf");
+  f.addEventListener("submit", async (e) => {
+    e.preventDefault(); if (!onSubmit) return;
+    const b = $("mSub"); b.disabled = true; b.textContent = "Please wait…"; $("mErr").classList.add("hidden");
+    try { await onSubmit(f); }
+    catch (err) { const x = $("mErr"); if (!x) return; x.textContent = errMsg(err); x.classList.remove("hidden"); b.disabled = false; b.textContent = submit; }
+  });
+  const first = f.querySelector("input:not([type=hidden]):not([type=radio]):not([type=file]),select,textarea");
+  if (first && innerWidth > 900) first.focus();
+  return f;
+}
+function closeModal() { const m = $("modal"); m.classList.remove("open"); m.innerHTML = ""; document.body.classList.remove("noscroll"); }
+const fv = (f) => Object.fromEntries(new FormData(f));
+const fld = (label, name, o = {}) => {
+  const v = o.value == null ? "" : o.value;
+  const ctl = o.rows ? `<textarea name="${name}" rows="${o.rows}" ${o.dis ? "disabled" : ""}>${esc(v)}</textarea>`
+    : `<input name="${name}" id="f_${name}" type="${o.type || "text"}" value="${esc(v)}" ${o.step ? `step="${o.step}"` : ""} ${o.ph ? `placeholder="${esc(o.ph)}"` : ""} ${o.dis ? "disabled" : ""} ${o.type === "number" ? 'inputmode="decimal"' : ""}>`;
+  return `<div class="f"><label for="f_${name}">${esc(label)}</label>${ctl}${o.note ? `<small>${esc(o.note)}</small>` : ""}</div>`;
+};
+const sel = (label, name, opts, val, o = {}) => `<div class="f"><label for="f_${name}">${esc(label)}</label><select name="${name}" id="f_${name}" ${o.dis ? "disabled" : ""}>${opts.map((x) => `<option value="${esc(x.v)}" ${x.v === val ? "selected" : ""} ${x.d ? `data-bal="${esc(x.d)}"` : ""}>${esc(x.t)}</option>`).join("")}</select>${o.note ? `<small>${esc(o.note)}</small>` : ""}</div>`;
+const fileF = (label, name, note) => `<div class="f"><label for="f_${name}">${esc(label)}</label><input type="file" name="${name}" id="f_${name}" accept="image/*,application/pdf">${note ? `<small>${esc(note)}</small>` : ""}</div>`;
+const hdr = (title, sub, actions = "") => `<header class="ph"><div><h1>${title}</h1><p>${sub}</p></div><div class="acts">${actions}</div></header>`;
+const searchBox = (ph) => `<input class="search" id="q" data-search type="text" aria-label="${ph}" placeholder="${ph}" value="${esc(S.q)}">`;
+const chipsBar = (items) => `<div class="chips">${items.map(([v, t]) => `<button type="button" class="btn${S.filter === v ? " pri" : ""}" data-act="setFilter" data-v="${v}">${t}</button>`).join("")}</div>`;
+const tbl = (cols, heads, rows) => `<div class="tr hd" style="--c:${cols}">${heads.map((h) => `<span>${h}</span>`).join("")}</div>` + rows.map((r) => `<div class="tr" style="--c:${cols}">${r.map((c, i) => `<div class="td${i === r.length - 1 && heads[i] === "" ? " act" : ""}" data-l="${esc(heads[i])}">${c}</div>`).join("")}</div>`).join("");
+const emptyRow = (t) => `<div class="empty">${t}</div>`;
+const nameLink = (c, sub) => `<a class="nm" href="#/clients/${c.id}" style="text-decoration:none">${esc(c.full_name)}</a>${sub ? `<br><span class="mut">${sub}</span>` : ""}`;
+const btn = (t, act, data = "", cls = "") => `<button type="button" class="btn ${cls}" data-act="${act}" ${data}>${t}</button>`;
+
+/* ======================= PAGES ======================= */
+function pDashboard() {
+  const today = todayD(), ms = new Date(today.getFullYear(), today.getMonth(), 1);
+  const act = openLoans(), bal = (l) => S.calc[l.id].balance;
+  const over = act.filter((l) => S.calc[l.id].st === "overdue");
+  const soon = act.filter((l) => S.calc[l.id].st !== "overdue" && (S.calc[l.id].due - today) / 864e5 <= 31);
+  const mp = S.payments.filter((p) => pd(p.paid_on) >= ms);
+  const collected = mp.reduce((a, p) => a + Number(p.amount), 0);
+  const interest = mp.reduce((a, p) => { const l = S.lMap[p.loan_id]; if (!l) return a; const c = S.calc[l.id]; return a + (c.base ? Number(p.amount) * c.interest / c.base : 0); }, 0);
+  const awaiting = S.payments.filter((p) => p.proof_status === "awaiting").length;
+  const wk = Date.now() - 7 * 864e5;
+  const unrem = act.filter((l) => ["overdue", "soon"].includes(S.calc[l.id].st) && !(S.lastRem[l.id] && new Date(S.lastRem[l.id].sent_at) > wk)).length;
+  const order = { overdue: 0, soon: 1, active: 2 };
+  const list = act.slice().sort((a, b) => order[S.calc[a.id].st] - order[S.calc[b.id].st] || S.calc[a.id].due - S.calc[b.id].due).slice(0, 8);
+  const rows = list.map((l) => { const c = S.calc[l.id], cl = S.cMap[l.client_id];
+    return [nameLink(cl, "Loan of " + money(l.principal)), `<span class="nm">${money(c.balance)}</span>${c.penalty ? `<br><span class="mut neg">includes ${money(c.penalty)} penalty</span>` : ""}`, fd(c.due), chip(c.st), btn("Remind", "goReminders") + btn("Record", "payModal", `data-loan="${l.id}"`, "pri")]; });
+  const recent = S.payments.slice(0, 5).map((p) => { const l = S.lMap[p.loan_id], cl = l && S.cMap[l.client_id];
+    return `<div class="li"><span><span class="nm">${esc(cl ? cl.full_name : "Client")}</span><br><span class="mut">${p.proof_status === "received" ? "Proof received" : "Awaiting proof"} · ${fd(p.paid_on)}</span></span><span class="nm">${money(p.amount)}</span></div>`; }).join("");
+  return hdr("Dashboard", `${today.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}. Payments are due before the ${S.settings.due_day}th.`, btn("+ New loan", "loanModal", "", "pri")) +
+    `<section class="kpis">
+      <div class="kpi"><span class="kl">Total outstanding</span><span class="kv">${money(act.reduce((a, l) => a + bal(l), 0))}</span><span class="kn">${act.length} open loans</span></div>
+      <div class="kpi"><span class="kl">Due before the ${S.settings.due_day}th</span><span class="kv">${money(soon.reduce((a, l) => a + bal(l), 0))}</span><span class="kn">${soon.length} clients still to pay</span></div>
+      <div class="kpi" style="border-color:#e9b3b3"><span class="kl neg">Overdue</span><span class="kv neg">${money(over.reduce((a, l) => a + bal(l), 0))}</span><span class="kn">${over.length} clients past the ${S.settings.due_day}th</span></div>
+      <div class="kpi"><span class="kl">Collected this month</span><span class="kv">${money(collected)}</span><span class="kn">${mp.length} payments received</span></div>
+      <div class="kpi"><span class="kl">Interest earned this month</span><span class="kv">${money(interest)}</span><span class="kn">Interest share of payments received</span></div>
+    </section>
+    <div class="grid">
+      <section class="card" style="flex:2 1 560px;min-width:0"><div class="cardh"><h2>Due this month</h2><a href="#/loans" class="nm" style="font-size:14px">View all loans</a></div>
+        ${rows.length ? tbl("2fr 1.3fr 1fr 1fr 1.6fr", ["Client", "Amount due", "Due", "Status", ""], rows) : emptyRow("No open loans yet. Add a client, then create their first loan.")}</section>
+      <aside style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:24px">
+        <section class="card pad" style="display:flex;flex-direction:column;gap:14px"><h2 style="margin:0;font-size:17px">Needs attention</h2>
+          <div class="row2"><span>Payments awaiting proof</span><span class="chip ${awaiting ? "soon" : "paid"}">${awaiting}</span></div>
+          <div class="row2"><span>Clients past the ${S.settings.due_day}th</span><span class="chip ${over.length ? "late" : "paid"}">${over.length}</span></div>
+          <div class="row2"><span>Reminders not sent this week</span><span class="chip ${unrem ? "soon" : "paid"}">${unrem}</span></div>
+          ${btn("Go to reminders", "goReminders", "", "pri big")}</section>
+        <section class="card"><div class="cardh"><h2>Recent payments</h2></div>${recent || emptyRow("No payments recorded yet.")}</section>
+      </aside></div>`;
+}
+
+function clientsList() {
+  const q = S.q.trim().toLowerCase();
+  let cs = S.clients.filter((c) => (S.filter === "archived") === !!c.archived);
+  if (["overdue", "soon"].includes(S.filter)) cs = S.clients.filter((c) => !c.archived && clientSt(c.id) === S.filter);
+  if (S.filter === "all") cs = S.clients.filter((c) => !c.archived);
+  if (q) cs = cs.filter((c) => (c.full_name + " " + (c.phone || "")).toLowerCase().includes(q));
+  const rows = cs.map((c) => {
+    const ls = S.loans.filter((l) => l.client_id === c.id), open = ls.filter((l) => ["overdue", "soon", "active"].includes(S.calc[l.id].st));
+    const next = open.length ? open.map((l) => S.calc[l.id].due).sort((a, b) => a - b)[0] : null;
+    return [nameLink(c, esc(c.phone || "No phone number")), open.length, `<span class="nm">${money(open.reduce((a, l) => a + S.calc[l.id].balance, 0))}</span>`, next ? fd(next) : "—", chip(clientSt(c.id)), btn("View", "goClient", `data-id="${c.id}"`)];
+  });
+  return rows.length ? tbl("2fr .8fr 1.2fr 1fr 1fr .8fr", ["Client", "Open loans", "Outstanding", "Next due", "Status", ""], rows) : emptyRow(S.clients.length ? "No clients match." : "No clients yet. Click “Add client” to start.");
+}
+function pClients() {
+  return hdr("Clients", "Everyone you lend to, and where they stand this month.", searchBox("Search clients") + btn("+ Add client", "clientModal", "", "pri")) +
+    `<section class="card"><div class="cardh"><h2>All clients</h2>${chipsBar([["all", "All"], ["overdue", "Overdue"], ["soon", "Due soon"], ["archived", "Archived"]])}</div><div id="list">${clientsList()}</div></section>`;
+}
+
+function pClient(id) {
+  const c = S.cMap[id]; if (!c) return hdr("Client not found", "This client may have been removed.", `<a class="btn" href="#/clients" style="text-decoration:none;display:inline-flex;align-items:center">Back to clients</a>`);
+  const docs = S.docs[id] || [];
+  const slot = (kind, title) => {
+    const d = docs.filter((x) => x.kind === kind).pop();
+    if (!d) return `<div class="doc none"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3d4a44" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M13 10h5M13 14h4M5 16c.7-1.5 2-2 3.5-2s2.8.5 3.5 2"/></svg><div class="nm">${title}</div><div class="mut">Choose a photo or PDF</div>${btn("Upload", "docUpload", `data-kind="${kind}" data-cid="${id}"`, "pri")}</div>`;
+    return `<div class="doc"><div><div class="nm">${title}</div><div class="mut">${esc(d.file_name || "File")} · added ${fd(d.created_at.slice(0, 10))}</div></div><div class="chips">${btn("View", "docView", `data-id="${d.id}"`)}${btn("Replace", "docReplace", `data-id="${d.id}" data-cid="${id}"`)}${isAdmin() ? btn("Remove", "docRemove", `data-id="${d.id}" data-cid="${id}"`, "dng") : ""}</div></div>`;
+  };
+  const others = docs.filter((x) => x.kind === "other").map((d) => `<div class="doc"><div><div class="nm">${esc(d.label || "Other document")}</div><div class="mut">${esc(d.file_name || "File")} · added ${fd(d.created_at.slice(0, 10))}</div></div><div class="chips">${btn("View", "docView", `data-id="${d.id}"`)}${isAdmin() ? btn("Remove", "docRemove", `data-id="${d.id}" data-cid="${id}"`, "dng") : ""}</div></div>`).join("");
+  const ls = S.loans.filter((l) => l.client_id === id);
+  const lrows = ls.map((l) => { const k = S.calc[l.id]; return `<div class="li"><span><span class="nm">Loan of ${money(l.principal)}</span><br><span class="mut">Issued ${fd(l.issued_on)} · due ${fd(k.due)}</span></span><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><span class="nm">${money(k.balance)} owed</span>${chip(k.st)}${btn("Open", "viewLoan", `data-id="${l.id}"`)}</span></div>`; }).join("");
+  return `<header class="ph"><div><a href="#/clients" class="nm" style="font-size:14px">← Clients</a><h1 style="margin-top:6px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">${esc(c.full_name)} ${chip(clientSt(id))}${c.archived ? '<span class="chip gray">Archived</span>' : ""}</h1></div><div class="acts">${btn("Edit", "clientModal", `data-id="${id}"`)}${btn("New loan", "loanModal", `data-client="${id}"`, "pri")}</div></header>
+  <div class="grid">
+    <div style="flex:2 1 520px;min-width:0;display:flex;flex-direction:column;gap:24px">
+      <section class="card pad" style="display:flex;flex-direction:column;gap:20px"><h2 style="margin:0;font-size:17px">Details</h2>
+        <div class="kv2"><div><span>Phone number</span><b>${esc(c.phone || "—")}</b></div><div><span>Home address</span><b>${esc(c.address || "—")}</b></div><div><span>Workplace</span><b>${esc(c.workplace || "—")}</b></div><div><span>Client since</span><b>${fd(c.created_at.slice(0, 10))}</b></div></div>
+        <div class="kv2"><div><span>Notes</span><b style="font-weight:500">${esc(c.notes || "—")}</b></div></div></section>
+      <section class="card"><div class="cardh"><h2>Loans</h2></div>${lrows || emptyRow("No loans for this client yet.")}</section>
+    </div>
+    <aside class="card pad" style="flex:1 1 340px;max-width:440px;display:flex;flex-direction:column;gap:16px"><div><h2 style="margin:0 0 4px;font-size:19px">Identity documents</h2><p class="mut" style="margin:0">JPG, PNG, WebP or PDF, up to 5 MB each.</p></div>
+      ${slot("id_front", "Identity card (front)")}${slot("id_back", "Identity card (back)")}${others}
+      ${btn("+ Add another document", "docOther", `data-cid="${id}"`)}
+      <div class="note"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10231C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:1px"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Stored privately. Only signed-in staff can view these, and only admins can remove them.</span></div></aside>
+  </div>`;
+}
+
+function loansList() {
+  const q = S.q.trim().toLowerCase();
+  let ls = S.loans.slice();
+  if (S.filter !== "all") ls = ls.filter((l) => S.calc[l.id].st === S.filter);
+  if (q) ls = ls.filter((l) => (S.cMap[l.client_id]?.full_name || "").toLowerCase().includes(q));
+  const rows = ls.map((l) => { const c = S.calc[l.id], cl = S.cMap[l.client_id];
+    return [nameLink(cl, "Due " + fd(c.due)), `<span class="nm">${money(l.principal)}</span>`, Number(l.interest_percent) + "%", fd(l.issued_on), money(c.paid), `<span class="nm">${money(c.balance)}</span>`, chip(c.st), btn("Open", "viewLoan", `data-id="${l.id}"`)]; });
+  return rows.length ? tbl("1.8fr 1fr .7fr 1fr 1fr 1fr 1fr .7fr", ["Client", "Amount loaned", "Interest", "Issued", "Paid so far", "Balance", "Status", ""], rows) : emptyRow(S.loans.length ? "No loans match." : "No loans yet. Click “New loan” to create one.");
+}
+function pLoans() {
+  return hdr("Loans", "Every loan, what has been paid, and what is still owed.", searchBox("Search by client") + btn("+ New loan", "loanModal", "", "pri")) +
+    `<section class="card"><div class="cardh"><h2>All loans</h2>${chipsBar([["all", "All"], ["active", "Active"], ["soon", "Due soon"], ["overdue", "Overdue"], ["paid", "Paid"], ["written_off", "Written off"]])}</div><div id="list">${loansList()}</div></section>`;
+}
+
+const METHOD = { ewallet: "E-wallet", bank: "Bank (FNB)", cash: "Cash" };
+function paymentsList() {
+  const q = S.q.trim().toLowerCase(), ms = new Date(todayD().getFullYear(), todayD().getMonth(), 1);
+  let ps = S.payments.slice();
+  if (S.filter === "awaiting") ps = ps.filter((p) => p.proof_status === "awaiting");
+  if (S.filter === "month") ps = ps.filter((p) => pd(p.paid_on) >= ms);
+  if (q) ps = ps.filter((p) => { const l = S.lMap[p.loan_id], c = l && S.cMap[l.client_id]; return ((c ? c.full_name : "") + " " + (p.reference || "")).toLowerCase().includes(q); });
+  const rows = ps.map((p) => { const l = S.lMap[p.loan_id], c = l && S.cMap[l.client_id];
+    const proof = p.proof_status === "received" ? `<span class="chip paid">Proof received</span>${btn("View", "proofView", `data-id="${p.id}"`)}` : `<span class="chip soon">Awaiting proof</span>${btn("Upload", "proofUpload", `data-id="${p.id}"`)}`;
+    return [c ? nameLink(c, "Loan of " + money(l.principal)) : "—", fd(p.paid_on), `<span class="nm">${money(p.amount)}</span>`, METHOD[p.method] || p.method, esc(p.reference || "—"), proof + (isAdmin() ? btn("Delete", "payDelete", `data-id="${p.id}"`, "dng") : "")]; });
+  return rows.length ? tbl("1.8fr 1fr 1fr 1fr 1.3fr 2fr", ["Client", "Date", "Amount", "Method", "Reference", ""], rows) : emptyRow(S.payments.length ? "No payments match." : "No payments yet. Click “Record payment” when one comes in.");
+}
+function pPayments() {
+  const ms = new Date(todayD().getFullYear(), todayD().getMonth(), 1), mp = S.payments.filter((p) => pd(p.paid_on) >= ms);
+  const act = openLoans();
+  return hdr("Payments", "Record what came in and keep the proof of payment with it.", searchBox("Search payments") + btn("+ Record payment", "payModal", "", "pri")) +
+    `<section class="kpis"><div class="kpi"><span class="kl">Received this month</span><span class="kv">${money(mp.reduce((a, p) => a + Number(p.amount), 0))}</span><span class="kn">${mp.length} payments</span></div>
+     <div class="kpi"><span class="kl">Awaiting proof</span><span class="kv">${S.payments.filter((p) => p.proof_status === "awaiting").length}</span><span class="kn">Ask clients to send it</span></div>
+     <div class="kpi"><span class="kl">Still to collect</span><span class="kv">${money(act.reduce((a, l) => a + S.calc[l.id].balance, 0))}</span><span class="kn">Across ${act.length} open loans</span></div></section>
+     <section class="card"><div class="cardh"><h2>Payment history</h2>${chipsBar([["all", "All"], ["awaiting", "Awaiting proof"], ["month", "This month"]])}</div><div id="list">${paymentsList()}</div></section>`;
+}
+
+/* ---- reminders ---- */
+function remMsg(l) {
+  const c = S.calc[l.id], cl = S.cMap[l.client_id], s = S.settings;
+  let m = (s.reminder_template || "").replace(/{name}/g, cl.full_name).replace(/{amount}/g, money(c.balance)).replace(/{month}/g, monthName(c.due));
+  const pay = [];
+  if (s.ewallet_number) pay.push("E-wallet: " + s.ewallet_number);
+  if (s.bank_account_number) pay.push((s.bank_name || "Bank") + ": " + [s.bank_account_name, s.bank_account_number].filter(Boolean).join(", "));
+  if (pay.length) m += "\n\n" + pay.join("\n") + "\nUse your full name as the reference and send proof of payment.";
+  return m;
+}
+function waLink(phone, msg) {
+  let d = String(phone || "").replace(/\D/g, ""); if (d.startsWith("00")) d = d.slice(2);
+  if (d.length === 8) d = "268" + d; else if (d.startsWith("0")) d = "268" + d.slice(1);
+  return "https://wa.me/" + d + "?text=" + encodeURIComponent(msg);
+}
+async function logReminder(loanId, channel) {
+  const l = S.lMap[loanId];
+  const { error } = await sb.from("reminders").insert({ loan_id: loanId, channel, message: remMsg(l), sent_by: S.user.id });
+  if (error) throw error; await refresh();
+}
+function pReminders() {
+  const cands = openLoans().filter((l) => ["overdue", "soon"].includes(S.calc[l.id].st)).sort((a, b) => S.calc[a.id].due - S.calc[b.id].due);
+  const tabs = `<div class="chips"><button type="button" class="btn${S.remTab === "send" ? " pri" : ""}" data-act="remTab" data-v="send">To send</button><button type="button" class="btn${S.remTab === "sent" ? " pri" : ""}" data-act="remTab" data-v="sent">Sent</button></div>`;
+  let left;
+  if (S.remTab === "send") {
+    left = cands.length ? cands.map((l) => { const c = S.calc[l.id], cl = S.cMap[l.client_id], lr = S.lastRem[l.id];
+      return `<div class="li" style="align-items:flex-start;flex-wrap:wrap"><span style="flex:1 1 200px"><span class="nm">${esc(cl.full_name)}</span><br><span class="mut">${money(c.balance)} due ${fd(c.due)}${lr ? " · reminded " + fd(lr.sent_at.slice(0, 10)) : ""}</span></span><span style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">${chip(c.st)}${btn("WhatsApp", "remWA", `data-loan="${l.id}"`, "pri")}${btn("Copy", "remCopy", `data-loan="${l.id}"`)}${btn("Mark sent", "remSent", `data-loan="${l.id}"`)}</span></div>`; }).join("") : emptyRow("Nobody needs a reminder right now. Clients appear here when their due date is within a week or has passed.");
+  } else {
+    left = S.reminders.length ? S.reminders.slice(0, 100).map((r) => { const l = S.lMap[r.loan_id], cl = l && S.cMap[l.client_id]; return `<div class="li"><span><span class="nm">${esc(cl ? cl.full_name : "Client")}</span><br><span class="mut">${new Date(r.sent_at).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span></span><span class="chip gray">${esc(r.channel)}</span></div>`; }).join("") : emptyRow("No reminders have been sent yet.");
+  }
+  const sample = cands[0] ? remMsg(cands[0]) : (S.settings.reminder_template || "");
+  return hdr("Reminders", "Remind clients before the " + S.settings.due_day + "th, and keep a record of who was told.", isAdmin() ? `<a class="btn" href="#/settings" style="text-decoration:none;display:inline-flex;align-items:center">Edit template</a>` : "") +
+    `<div class="grid"><section class="card" style="flex:1 1 440px;min-width:0"><div class="cardh"><h2>${S.remTab === "send" ? "Who to remind" : "Reminders sent"}</h2>${tabs}</div>${left}</section>
+     <aside class="card pad" style="flex:1 1 340px;max-width:480px;display:flex;flex-direction:column;gap:14px"><h2 style="margin:0;font-size:19px">Message preview</h2><p class="mut" style="margin:0">Built from your template in Settings. Each client’s name and amount are filled in automatically.</p>
+     <textarea readonly rows="9" aria-label="Message preview">${esc(sample)}</textarea>
+     <p class="mut" style="margin:0">Messages are sent from your own phone through WhatsApp. “Mark sent” records a reminder you gave another way, so nobody is reminded twice.</p></aside></div>`;
+}
+
+/* ---- staff + settings ---- */
+function pStaff() {
+  if (!isAdmin()) return hdr("Staff", "Admins only.");
+  const rows = S.staffList.map((s) => [`<span class="nm">${esc(s.full_name)}</span>${s.id === S.user.id ? ' <span class="mut">(you)</span>' : ""}`, esc(s.email || "—"), `<span class="chip gray">${s.role === "admin" ? "Admin" : "Staff"}</span>`, `<span class="chip ${s.active ? "paid" : "late"}">${s.active ? "Active" : "Disabled"}</span>`, btn("Edit", "staffModal", `data-id="${s.id}"`)]);
+  return hdr("Staff", "Who can sign in to this system. Admins only.", btn("+ Add staff", "staffLink", "", "pri")) +
+    `<div class="grid"><section class="card" style="flex:2 1 560px;min-width:0"><div class="cardh"><h2>Team</h2></div>${tbl("1.5fr 2fr .8fr .9fr .8fr", ["Name", "Email", "Role", "Status", ""], rows)}</section>
+     <aside class="card pad" style="flex:1 1 300px;max-width:400px"><h2 style="margin:0 0 8px;font-size:17px">What each role can do</h2><p class="mut" style="margin:0 0 12px"><b>Staff</b> manage clients, loans, payments and reminders, and upload documents.</p><p class="mut" style="margin:0"><b>Admins</b> can also delete records, remove documents, manage staff and change settings.</p></aside></div>`;
+}
+function pSettings() {
+  if (!isAdmin()) return hdr("Settings", "Admins only.");
+  const s = S.settings, sec = (t, sub, body) => `<section class="card pad" style="margin-bottom:24px"><h2 style="margin:0 0 4px;font-size:18px">${t}</h2><p class="mut" style="margin:0 0 16px">${sub}</p>${body}</section>`;
+  return hdr("Settings", "Business rules and details used across the system.", `<button class="btn pri" style="height:44px;padding:0 18px;font-size:14px" form="setForm" type="submit">Save changes</button>`) +
+    `<form id="setForm" class="grid" novalidate><div style="flex:1 1 420px;min-width:0">
+      ${sec("Business", "Shown on reminders and reports.", `<div class="two">${fld("Business name", "business_name", { value: s.business_name })}${fld("Currency symbol", "currency_symbol", { value: s.currency_symbol })}</div>`)}
+      ${sec("Loan rules", "Defaults for every new loan. Existing loans keep the rates they were issued with.", `<div class="two">${fld("Monthly interest %", "monthly_interest_percent", { value: s.monthly_interest_percent, type: "number", step: "0.01" })}${fld("Late penalty %", "penalty_percent", { value: s.penalty_percent, type: "number", step: "0.01" })}</div>${fld("Payment due day", "due_day", { value: s.due_day, type: "number", note: "Day of the month payments are due by (1 to 28)" })}`)}
+    </div><div style="flex:1 1 420px;min-width:0">
+      ${sec("Payment details", "Added to every reminder so clients know where to pay.", fld("E-wallet number", "ewallet_number", { value: s.ewallet_number }) + `<div class="two">${fld("Bank", "bank_name", { value: s.bank_name })}${fld("Account name", "bank_account_name", { value: s.bank_account_name })}</div>` + fld("Account number", "bank_account_number", { value: s.bank_account_number }))}
+      ${sec("Reminder message", "Use {name}, {amount} and {month} and they are filled in for each client.", fld("Template", "reminder_template", { value: s.reminder_template, rows: 4 }))}
+      <p class="ferr hidden" id="setErr" role="alert"></p></div></form>`;
+}
+
+/* ======================= MODALS / ACTIONS ======================= */
+function clientModal(id) {
+  const c = id ? S.cMap[id] : {};
+  modal({ title: id ? "Edit client" : "Add client", submit: "Save client",
+    body: fld("Full name", "full_name", { value: c.full_name }) + fld("Phone number", "phone", { value: c.phone, type: "tel", note: "Used for WhatsApp reminders" }) + fld("Home address", "address", { value: c.address }) + fld("Workplace", "workplace", { value: c.workplace }) + fld("Notes", "notes", { value: c.notes, rows: 3 }) +
+      (id ? `<label class="check"><input type="checkbox" name="archived" ${c.archived ? "checked" : ""}> Archive this client (hide from lists)</label>` : fileF("Identity card, front (optional)", "id_front") + fileF("Identity card, back (optional)", "id_back", "You can add or change these later.")),
+    onSubmit: async (f) => {
+      const v = fv(f); if (!v.full_name.trim()) throw new Error("Enter the client’s full name.");
+      const row = { full_name: v.full_name.trim(), phone: v.phone.trim() || null, address: v.address.trim() || null, workplace: v.workplace.trim() || null, notes: v.notes.trim() || null };
+      let cid = id;
+      if (id) { row.archived = !!f.elements.archived.checked; const { error } = await sb.from("clients").update(row).eq("id", id); if (error) throw error; }
+      else {
+        row.created_by = S.user.id; const { data, error } = await sb.from("clients").insert(row).select().single(); if (error) throw error; cid = data.id;
+        for (const k of ["id_front", "id_back"]) { const file = f.elements[k].files[0]; if (file) await saveDoc(cid, k, file); }
+      }
+      closeModal(); await refresh(); toast("Client saved"); if (!id) go("/clients/" + cid);
+    } });
+}
+async function saveDoc(cid, kind, file, label) {
+  const path = await upload("client-docs", cid, file);
+  const { error } = await sb.from("client_documents").insert({ client_id: cid, kind, label: label || null, file_path: path, file_name: file.name, uploaded_by: S.user.id });
+  if (error) throw error;
+}
+
+function loanModal(clientId) {
+  const cs = S.clients.filter((c) => !c.archived);
+  if (!cs.length) { toast("Add a client first."); return; }
+  const s = S.settings;
+  const f = modal({ title: "New loan", submit: "Save loan",
+    body: sel("Client", "client_id", cs.map((c) => ({ v: c.id, t: c.full_name })), clientId || cs[0].id) + fld(`Amount loaned (${s.currency_symbol})`, "principal", { type: "number", step: "0.01", ph: "0.00" }) +
+      `<div class="two">${fld("Interest %", "interest_percent", { value: s.monthly_interest_percent, type: "number", step: "0.01", note: "From Settings" })}${fld("Due day", "due_day", { value: s.due_day, type: "number", note: "Of each month" })}</div>` + fld("Date issued", "issued_on", { value: iso(todayD()), type: "date" }) + fld("Notes", "notes", { rows: 2 }) +
+      `<div class="sumbox" id="sum" aria-live="polite"></div>`,
+    onSubmit: async (f) => {
+      const v = fv(f), p = num(v.principal), i = num(v.interest_percent), d = parseInt(v.due_day, 10);
+      if (!(p > 0)) throw new Error("Enter the amount loaned.");
+      if (!(i >= 0)) throw new Error("Enter the interest percentage.");
+      if (!(d >= 1 && d <= 28)) throw new Error("Due day must be between 1 and 28.");
+      if (!v.issued_on) throw new Error("Choose the date issued.");
+      const { error } = await sb.from("loans").insert({ client_id: v.client_id, principal: p, interest_percent: i, penalty_percent: Number(s.penalty_percent), due_day: d, issued_on: v.issued_on, notes: v.notes.trim() || null, created_by: S.user.id });
+      if (error) throw error; closeModal(); await refresh(); toast("Loan saved");
+    } });
+  const upd = () => {
+    const v = fv(f), p = num(v.principal) || 0, i = num(v.interest_percent) || 0, base = r2(p * (1 + i / 100)), pen = r2(base * Number(s.penalty_percent) / 100);
+    const iss = v.issued_on ? pd(v.issued_on) : todayD(), due = new Date(iss.getFullYear(), iss.getMonth() + 1, parseInt(v.due_day, 10) || s.due_day);
+    $("sum").innerHTML = `<div><span>Interest (${i}%)</span><b>${money(base - p)}</b></div><div><span>Total due by ${fd(due)}</span><b>${money(base)}</b></div><div class="neg"><span>Penalty if paid late (${Number(s.penalty_percent)}%)</span><b>+ ${money(pen)}</b></div>`;
+  };
+  f.addEventListener("input", upd); upd();
+}
+
+function viewLoan(id) {
+  const l = S.lMap[id], c = S.calc[id], cl = S.cMap[l.client_id];
+  const pays = c.pays.map((p) => `<div class="li" style="padding:10px 0"><span>${fd(p.paid_on)} · ${METHOD[p.method] || p.method}</span><b>${money(p.amount)}</b></div>`).join("");
+  modal({ title: cl.full_name + " · loan", hideSubmit: true, wide: true,
+    body: `<div style="display:flex;gap:10px;align-items:center;margin-bottom:16px">${chip(c.st)}<span class="mut">Issued ${fd(l.issued_on)} · due ${fd(c.due)}</span></div>
+      <div class="sumbox"><div><span>Amount loaned</span><b>${money(l.principal)}</b></div><div><span>Interest (${Number(l.interest_percent)}%)</span><b>${money(c.interest)}</b></div>${c.penalty ? `<div class="neg"><span>Late penalty (${Number(l.penalty_percent)}%)</span><b>${money(c.penalty)}</b></div>` : ""}<div><span>Paid so far</span><b>${money(c.paid)}</b></div><div style="border-top:1px solid #d9d6cb;padding-top:8px"><span><b>Balance</b></span><b>${money(c.balance)}</b></div></div>
+      <h3 style="margin:20px 0 4px;font-size:15px">Payments</h3>${pays || '<p class="mut">No payments yet.</p>'}
+      ${l.notes ? `<h3 style="margin:16px 0 4px;font-size:15px">Notes</h3><p class="mut" style="margin:0">${esc(l.notes)}</p>` : ""}
+      <div class="chips" style="margin:20px 0 16px">${c.st !== "paid" && c.st !== "written_off" ? btn("Record payment", "payModal", `data-loan="${id}"`, "pri") : ""}${btn("Send reminder", "goReminders")}${l.status === "written_off" ? btn("Reopen loan", "loanStatus", `data-id="${id}" data-v="active"`) : btn("Write off", "loanStatus", `data-id="${id}" data-v="written_off"`)}${isAdmin() ? btn("Delete loan", "loanDelete", `data-id="${id}"`, "dng") : ""}</div>` });
+}
+
+function payModal(loanId) {
+  const opts = openLoans().map((l) => ({ v: l.id, t: S.cMap[l.client_id].full_name + " · " + money(l.principal) + " · owes " + money(S.calc[l.id].balance), d: String(S.calc[l.id].balance) }));
+  if (!opts.length) { toast("There are no open loans to record a payment against."); return; }
+  const first = loanId && opts.find((o) => o.v === loanId) ? loanId : opts[0].v;
+  const f = modal({ title: "Record payment", submit: "Save payment",
+    body: sel("Loan", "loan_id", opts, first) + fld(`Amount paid (${S.settings.currency_symbol})`, "amount", { type: "number", step: "0.01" }) + fld("Date paid", "paid_on", { value: iso(todayD()), type: "date" }) +
+      `<div class="f"><label>Method</label><div class="sw"><label class="opt"><input type="radio" name="method" value="ewallet" checked><span>E-wallet</span></label><label class="opt"><input type="radio" name="method" value="bank"><span>FNB</span></label><label class="opt"><input type="radio" name="method" value="cash"><span>Cash</span></label></div></div>` +
+      fld("Reference", "reference", { note: "Clients should use their full name as the reference" }) + fileF("Proof of payment", "proof", "Screenshot or photo. You can add it later."),
+    onSubmit: async (f) => {
+      const v = fv(f), amt = num(v.amount), l = S.lMap[v.loan_id], c = S.calc[v.loan_id];
+      if (!(amt > 0)) throw new Error("Enter the amount paid.");
+      if (amt > c.balance + 0.005) throw new Error("That is more than the balance of " + money(c.balance) + ".");
+      if (!v.paid_on) throw new Error("Choose the date paid.");
+      const file = f.elements.proof.files[0]; let path = null;
+      if (file) path = await upload("proofs", v.loan_id, file);
+      const { error } = await sb.from("payments").insert({ loan_id: v.loan_id, amount: amt, paid_on: v.paid_on, method: v.method, reference: v.reference.trim() || null, proof_status: path ? "received" : "awaiting", proof_path: path, recorded_by: S.user.id });
+      if (error) throw error;
+      if (c.balance - amt < 0.005 && l.status === "active") await sb.from("loans").update({ status: "paid" }).eq("id", l.id);
+      closeModal(); await refresh(); toast("Payment recorded");
+    } });
+  const fill = () => { const o = f.elements.loan_id.selectedOptions[0]; f.elements.amount.value = o.dataset.bal; f.elements.reference.value = S.cMap[S.lMap[o.value].client_id].full_name; };
+  f.elements.loan_id.addEventListener("change", fill); fill();
+}
+
+function staffModal(id) {
+  const s = S.staffList.find((x) => x.id === id), me = id === S.user.id;
+  modal({ title: "Edit staff", submit: "Save",
+    body: fld("Full name", "full_name", { value: s.full_name }) + sel("Role", "role", [{ v: "staff", t: "Staff" }, { v: "admin", t: "Admin" }], s.role, { dis: me, note: me ? "You can’t change your own role." : "" }) +
+      `<label class="check"><input type="checkbox" name="active" ${s.active ? "checked" : ""} ${me ? "disabled" : ""}> Can sign in</label>`,
+    onSubmit: async (f) => {
+      const v = fv(f); if (!v.full_name.trim()) throw new Error("Enter a name.");
+      const row = { full_name: v.full_name.trim() }; if (!me) { row.role = v.role; row.active = !!f.elements.active.checked; }
+      const { error } = await sb.from("staff").update(row).eq("id", id); if (error) throw error;
+      closeModal(); await refresh(); toast("Staff updated");
+    } });
+}
+function staffLink() {
+  modal({ title: "Add staff", submit: "Add staff",
+    body: `<div class="note" style="margin-bottom:16px"><span>First create their login in Supabase: <b>Authentication → Users → Add user</b> (tick “Auto Confirm User”). Then enter the same email below to give them access.</span></div>` + fld("Email", "email", { type: "email" }) + fld("Full name", "full_name") + sel("Role", "role", [{ v: "staff", t: "Staff" }, { v: "admin", t: "Admin" }], "staff"),
+    onSubmit: async (f) => {
+      const v = fv(f); if (!v.email.trim() || !v.full_name.trim()) throw new Error("Enter their email and name.");
+      const { error } = await sb.rpc("admin_link_staff", { p_email: v.email, p_full_name: v.full_name, p_role: v.role }); if (error) throw error;
+      closeModal(); await refresh(); toast("Staff added");
+    } });
+}
+
+const A = {
+  closeModal, clientModal: (d) => clientModal(d.id), loanModal: (d) => loanModal(d.client), payModal: (d) => payModal(d.loan), viewLoan: (d) => viewLoan(d.id),
+  staffModal: (d) => staffModal(d.id), staffLink,
+  goReminders: () => { closeModal(); go("/reminders"); }, goClient: (d) => go("/clients/" + d.id),
+  setFilter: (d) => { S.filter = d.v; render(); }, remTab: (d) => { S.remTab = d.v; render(); },
+  signout: async () => { await sb.auth.signOut(); showAuth(); },
+  more: () => modal({ title: "More", hideSubmit: true, body: `<div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px"><a class="btn big" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="#/reminders" data-act="closeModal">Reminders</a>${isAdmin() ? `<a class="btn big" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="#/staff" data-act="closeModal">Staff</a><a class="btn big" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="#/settings" data-act="closeModal">Settings</a>` : ""}<button type="button" class="btn big" data-act="signout">Sign out</button></div>` }),
+  loanStatus: (d) => guard(async () => { const { error } = await sb.from("loans").update({ status: d.v }).eq("id", d.id); if (error) throw error; closeModal(); await refresh(); toast("Loan updated"); }),
+  loanDelete: (d) => { if (!confirm("Delete this loan? This can’t be undone. Payments must be deleted first.")) return; guard(async () => { const { error } = await sb.from("loans").delete().eq("id", d.id); if (error) throw error; closeModal(); await refresh(); toast("Loan deleted"); }); },
+  payDelete: (d) => { if (!confirm("Delete this payment? This can’t be undone.")) return; guard(async () => { const { error } = await sb.from("payments").delete().eq("id", d.id); if (error) throw error; await refresh(); toast("Payment deleted"); }); },
+  proofView: (d) => { const p = S.payments.find((x) => x.id === d.id); if (p && p.proof_path) openFile("proofs", p.proof_path); },
+  proofUpload: (d) => pickFile((file) => guard(async () => { const p = S.payments.find((x) => x.id === d.id); const path = await upload("proofs", p.loan_id, file); const { error } = await sb.from("payments").update({ proof_path: path, proof_status: "received" }).eq("id", d.id); if (error) throw error; await refresh(); toast("Proof saved"); })),
+  docUpload: (d) => pickFile((file) => guard(async () => { await saveDoc(d.cid, d.kind, file); await loadDocs(d.cid); render(); toast("Document saved"); })),
+  docOther: (d) => pickFile((file) => guard(async () => { const label = prompt("What is this document? (for example: Proof of address)", ""); if (label === null) return; await saveDoc(d.cid, "other", file, label.trim()); await loadDocs(d.cid); render(); toast("Document saved"); })),
+  docReplace: (d) => pickFile((file) => guard(async () => { const doc = S.docs[d.cid].find((x) => x.id === d.id); const path = await upload("client-docs", d.cid, file); const { error } = await sb.from("client_documents").update({ file_path: path, file_name: file.name }).eq("id", d.id); if (error) throw error; if (isAdmin()) await sb.storage.from("client-docs").remove([doc.file_path]); await loadDocs(d.cid); render(); toast("Document replaced"); })),
+  docView: (d) => { const doc = Object.values(S.docs).flat().find((x) => x.id === d.id); if (doc) openFile("client-docs", doc.file_path); },
+  docRemove: (d) => { if (!confirm("Remove this document permanently?")) return; guard(async () => { const doc = S.docs[d.cid].find((x) => x.id === d.id); const { error } = await sb.from("client_documents").delete().eq("id", d.id); if (error) throw error; await sb.storage.from("client-docs").remove([doc.file_path]); await loadDocs(d.cid); render(); toast("Document removed"); }); },
+  remWA: (d) => guard(async () => { const l = S.lMap[d.loan], cl = S.cMap[l.client_id]; if (!cl.phone) { toast("Add a phone number for " + cl.full_name + " first."); return; } window.open(waLink(cl.phone, remMsg(l)), "_blank"); await logReminder(d.loan, "whatsapp"); }),
+  remCopy: (d) => guard(async () => { await navigator.clipboard.writeText(remMsg(S.lMap[d.loan])); await logReminder(d.loan, "other"); toast("Message copied"); }),
+  remSent: (d) => guard(async () => { await logReminder(d.loan, "other"); toast("Marked as sent"); })
+};
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-act]"); if (!el) return;
+  const fn = A[el.dataset.act]; if (fn) { if (el.tagName !== "A") e.preventDefault(); fn(el.dataset, el); }
+});
+document.addEventListener("input", (e) => { if (e.target.matches("[data-search]")) { S.q = e.target.value; const l = $("list"); if (l) l.innerHTML = LISTS[route().page]?.() || ""; } });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("modal").classList.contains("open")) closeModal(); });
+$("modal").addEventListener("mousedown", (e) => { if (e.target === $("modal")) closeModal(); });
+
+/* settings save */
+document.addEventListener("submit", async (e) => {
+  if (e.target.id !== "setForm") return; e.preventDefault();
+  const f = e.target, v = fv(f), x = $("setErr"); x.classList.add("hidden");
+  const row = { business_name: v.business_name.trim() || null, currency_symbol: v.currency_symbol.trim() || "E", monthly_interest_percent: num(v.monthly_interest_percent), penalty_percent: num(v.penalty_percent), due_day: parseInt(v.due_day, 10), ewallet_number: v.ewallet_number.trim() || null, bank_name: v.bank_name.trim() || null, bank_account_name: v.bank_account_name.trim() || null, bank_account_number: v.bank_account_number.trim() || null, reminder_template: v.reminder_template.trim(), updated_at: new Date().toISOString() };
+  const bad = !(row.monthly_interest_percent >= 0) || !(row.penalty_percent >= 0) || !(row.due_day >= 1 && row.due_day <= 28) || !row.reminder_template;
+  if (bad) { x.textContent = "Check the interest, penalty, due day (1 to 28) and message template."; x.classList.remove("hidden"); return; }
+  const { error } = await sb.from("settings").update(row).eq("id", 1);
+  if (error) { x.textContent = errMsg(error); x.classList.remove("hidden"); return; }
+  await refresh(); toast("Settings saved");
+});
+
+/* ======================= ROUTER + RENDER ======================= */
+const LISTS = { clients: clientsList, loans: loansList, payments: paymentsList };
+const NAV = [["dashboard", "Dashboard", '<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>'],
+  ["clients", "Clients", '<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6"/>'],
+  ["loans", "Loans", '<rect x="2" y="6" width="20" height="13" rx="2"/><circle cx="12" cy="12.5" r="3"/>'],
+  ["payments", "Payments", '<path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'],
+  ["reminders", "Reminders", '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 0 0 4 0"/>'],
+  ["staff", "Staff", '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>', 1],
+  ["settings", "Settings", '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>', 1]];
+const svg = (p) => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+function route() { const p = location.hash.replace(/^#\/?/, "").split("/"); return { page: p[0] || "dashboard", id: p[1] }; }
+const go = (path) => { location.hash = "#" + path; };
+async function render() {
+  if (!S.me || !S.settings) return;
+  const r = route(), page = r.page;
+  if (page === "clients" && r.id && !S.docs[r.id]) { try { await loadDocs(r.id); } catch (e) { toast(errMsg(e)); } }
+  const items = NAV.filter((n) => !n[3] || isAdmin());
+  $("navs").innerHTML = items.map(([k, t, p, a]) => `<a class="nav${page === k ? " on" : ""}" href="#/${k}">${svg(p)}${t}${a ? '<span style="margin-left:auto;font-size:11px;color:#E3A94B">Admin</span>' : ""}</a>`).join("");
+  const tab = (k) => NAV.find((n) => n[0] === k);
+  $("tabs").innerHTML = ["dashboard", "clients", "loans", "payments"].map((k) => `<a class="tab${page === k ? " on" : ""}" href="#/${k}">${svg(tab(k)[2])}${k === "dashboard" ? "Home" : tab(k)[1]}</a>`).join("") + `<button class="tab${["reminders", "staff", "settings"].includes(page) ? " on" : ""}" type="button" data-act="more">${svg('<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>')}More</button>`;
+  const html = { dashboard: pDashboard, clients: () => (r.id ? pClient(r.id) : pClients()), loans: pLoans, payments: pPayments, reminders: pReminders, staff: pStaff, settings: pSettings }[page] || pDashboard;
+  const top = render.last !== page + (r.id || ""); render.last = page + (r.id || "");
+  $("main").innerHTML = html();
+  if (top) { window.scrollTo(0, 0); }
+  const t = NAV.find((n) => n[0] === page); document.title = (t ? t[1] + " · " : "") + "Thandeka’s Loans";
+}
+window.addEventListener("hashchange", () => { S.q = ""; S.filter = "all"; closeModal(); render(); });
+
+/* ======================= SIGN-IN FLOW ======================= */
+const VIEWS = ["loginView", "forgotView", "sentView", "resetView"];
+const isRecovery = /type=recovery/.test(location.hash);
+let busy = false, attempts = 0, cooldownTimer = null;
+function showView(id) { VIEWS.forEach((v) => $(v).classList.toggle("hidden", v !== id)); const f = $(id).querySelector("input:not([type=checkbox])"); if (f && innerWidth > 900) f.focus(); }
+function banner(id, kind, msg) { const a = $(id); a.className = "alert show " + kind; a.textContent = msg; }
+function clearBanner(id) { const a = $(id); a.className = "alert"; a.textContent = ""; }
+function fieldError(i, e, msg) { const a = $(i), b = $(e); if (msg) { a.setAttribute("aria-invalid", "true"); b.textContent = msg; b.classList.remove("hidden"); } else { a.removeAttribute("aria-invalid"); b.textContent = ""; b.classList.add("hidden"); } }
+function setBusy(id, on, label) { busy = on; const b = $(id); b.disabled = on; b.querySelector(".spin").classList.toggle("hidden", !on); b.querySelector(".lbl").textContent = on ? "Please wait…" : label; }
+const validEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+function authMessage(e) {
+  const c = e.code || "";
+  if (c === "invalid_credentials") return "Wrong email or password. Please try again.";
+  if (c === "email_not_confirmed") return "This account hasn’t been activated yet. Contact the administrator.";
+  if (c === "user_banned") return "This account has been disabled. Contact the administrator.";
+  if (e.status === 429 || c === "over_request_rate_limit") return "Too many attempts. Wait a few minutes and try again.";
+  if (e.name === "AuthRetryableFetchError") return "Can’t reach the server. Check your internet connection.";
+  return "Something went wrong. Please try again.";
+}
+function showAuth() { S.me = null; S.user = null; $("app").classList.add("hidden"); $("auth").classList.remove("hidden"); $("boot").classList.add("hidden"); $("password").value = ""; showView("loginView"); document.title = "Sign in · Thandeka’s Loans"; }
+async function loadStaffRow(uid) {
+  const { data, error } = await sb.from("staff").select("*").eq("id", uid).maybeSingle();
+  if (error) throw error; return data && data.active === true ? data : null;
+}
+async function enterApp(user, staff) {
+  S.user = user; S.me = staff;
+  try { await loadAll(); } catch (e) { toast(errMsg(e)); }
+  $("meName").textContent = staff.full_name; $("meRole").textContent = staff.role === "admin" ? "Admin" : "Staff";
+  $("auth").classList.add("hidden"); $("app").classList.remove("hidden"); $("boot").classList.add("hidden");
+  if (!location.hash || /type=recovery|access_token/.test(location.hash)) history.replaceState(null, "", location.pathname + "#/dashboard");
+  render();
+}
+document.querySelectorAll(".toggle").forEach((b) => b.addEventListener("click", () => { const i = $(b.dataset.for), r = i.type === "password"; i.type = r ? "text" : "password"; b.textContent = r ? "Hide" : "Show"; b.setAttribute("aria-label", r ? "Hide password" : "Show password"); }));
+document.querySelectorAll("[data-goto]").forEach((b) => b.addEventListener("click", () => { clearBanner("aLogin"); showView(b.dataset.goto); }));
+$("toForgot").addEventListener("click", () => { $("femail").value = $("email").value.trim(); showView("forgotView"); });
+const caps = (e) => $("capsHint").classList.toggle("hidden", !(e.getModifierState && e.getModifierState("CapsLock")));
+$("password").addEventListener("keydown", caps); $("password").addEventListener("keyup", caps); $("password").addEventListener("blur", () => $("capsHint").classList.add("hidden"));
+[["email", "emailErr"], ["password", "passErr"], ["femail", "femailErr"], ["np1", "np1Err"], ["np2", "np2Err"]].forEach(([i, e]) => $(i).addEventListener("input", () => fieldError(i, e, "")));
+function startCooldown() {
+  const b = $("loginBtn"); let left = COOLDOWN_SECONDS; b.disabled = true;
+  const tick = () => { b.querySelector(".lbl").textContent = "Try again in " + left + "s"; if (left-- <= 0) { clearInterval(cooldownTimer); cooldownTimer = null; attempts = 0; b.disabled = false; b.querySelector(".lbl").textContent = "Sign in"; clearBanner("aLogin"); } };
+  tick(); cooldownTimer = setInterval(tick, 1000);
+}
+$("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault(); if (busy || cooldownTimer) return; clearBanner("aLogin");
+  const email = $("email").value.trim(), password = $("password").value; let bad = false;
+  if (!email) { fieldError("email", "emailErr", "Enter your email."); bad = true; } else if (!validEmail(email)) { fieldError("email", "emailErr", "That email address doesn’t look right."); bad = true; }
+  if (!password) { fieldError("password", "passErr", "Enter your password."); bad = true; }
+  if (bad) { ($("emailErr").classList.contains("hidden") ? $("password") : $("email")).focus(); return; }
+  setBusy("loginBtn", true, "Sign in"); let wrong = false;
+  try {
+    if (!$("remember").checked) sb = makeClient(window.sessionStorage);
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) { banner("aLogin", "err", authMessage(error)); wrong = error.code === "invalid_credentials"; return; }
+    const staff = await loadStaffRow(data.user.id);
+    if (!staff) { await sb.auth.signOut(); banner("aLogin", "err", "Your account doesn’t have access to this system. Contact the administrator."); return; }
+    attempts = 0; await enterApp(data.user, staff);
+  } catch (err) { banner("aLogin", "err", "Something went wrong. Please try again."); }
+  finally { setBusy("loginBtn", false, "Sign in"); if (wrong && ++attempts >= MAX_ATTEMPTS) { banner("aLogin", "err", "Too many wrong attempts. Please wait a moment, or reset your password."); startCooldown(); } }
+});
+$("forgotForm").addEventListener("submit", async (e) => {
+  e.preventDefault(); if (busy) return; const email = $("femail").value.trim();
+  if (!validEmail(email)) { fieldError("femail", "femailErr", email ? "That email address doesn’t look right." : "Enter your email."); $("femail").focus(); return; }
+  setBusy("forgotBtn", true, "Send reset link");
+  try { await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname }); } catch (_) {}
+  setBusy("forgotBtn", false, "Send reset link"); showView("sentView");
+});
+sb.auth.onAuthStateChange((ev) => { if (ev === "PASSWORD_RECOVERY") { $("app").classList.add("hidden"); $("auth").classList.remove("hidden"); $("boot").classList.add("hidden"); showView("resetView"); } });
+$("resetForm").addEventListener("submit", async (e) => {
+  e.preventDefault(); if (busy) return; clearBanner("aReset");
+  const p1 = $("np1").value, p2 = $("np2").value; let bad = false;
+  if (p1.length < 8) { fieldError("np1", "np1Err", "Use at least 8 characters."); bad = true; }
+  if (p2 !== p1) { fieldError("np2", "np2Err", "The two passwords don’t match."); bad = true; }
+  if (bad) return;
+  setBusy("resetBtn", true, "Save new password");
+  const { error } = await sb.auth.updateUser({ password: p1 });
+  setBusy("resetBtn", false, "Save new password");
+  if (error) { banner("aReset", "err", error.code === "same_password" ? "Choose a password you haven’t used before." : "We couldn’t save that password. The link may have expired. Request a new one."); return; }
+  await sb.auth.signOut(); history.replaceState(null, "", location.pathname); $("np1").value = ""; $("np2").value = ""; showView("loginView"); banner("aLogin", "ok", "Password updated. Sign in with your new password.");
+});
+
+/* ======================= START ======================= */
+(async () => {
+  try {
+    if (isRecovery) { $("boot").classList.add("hidden"); $("auth").classList.remove("hidden"); return; }
+    const { data } = await sb.auth.getSession();
+    if (data.session) { const staff = await loadStaffRow(data.session.user.id); if (staff) { await enterApp(data.session.user, staff); return; } await sb.auth.signOut(); }
+  } catch (_) {}
+  showAuth();
+})();
+</script>
+</body>
+</html>
